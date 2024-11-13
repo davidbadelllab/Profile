@@ -33,14 +33,23 @@ export default function Header() {
     setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
+  const handleDownloadCV = () => {
+    const link = document.createElement('a')
+    link.href = '/documents/CV David Badell.pdf'
+    link.download = 'CV_David_Badell.pdf'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   return (
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg' 
+        isScrolled
+          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >
@@ -61,8 +70,7 @@ export default function Header() {
 
         <div className="flex items-center space-x-6">
           <nav className="hidden md:flex space-x-8">
-            
-            {[''].map((item) => ( // aqui se especifica si es que se quiere un menu la seccion ahora el array esta vacio pero bueno en un futuro cambiar
+            {[''].map((item) => (
               <motion.a
                 key={item}
                 href={`#${item.toLowerCase()}`}
@@ -74,6 +82,28 @@ export default function Header() {
               </motion.a>
             ))}
           </nav>
+
+          <motion.button
+            onClick={handleDownloadCV}
+            className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <svg 
+              className="h-5 w-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" 
+              />
+            </svg>
+            <span>Download CV</span>
+          </motion.button>
 
           <motion.button
             onClick={toggleTheme}
