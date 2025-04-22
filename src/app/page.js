@@ -518,38 +518,68 @@ export default function Home() {
                       >
                         Ideas en Realidad
                       </motion.span>
-              </h1>
+                    </h1>
                     <motion.p 
                       className="text-xl text-gray-300 mb-8 leading-relaxed"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 1.1, duration: 0.8 }}
                     >
-                      <span className="font-medium text-white">Desarrollador Full Stack</span> con enfoque en crear experiencias digitales 
-                      extraordinarias que trascienden lo convencional, fusionando innovación tecnológica 
-                      con diseño inmersivo para forjar el futuro digital.
-                    </motion.p>    
-                  </motion.div>
-            </motion.div>
+                      <span className="font-medium text-white">Desarrollador Full Stack</span> con enfoque en crear experiencias digitales extraordinarias que trascienden lo convencional, fusionando innovación tecnológica con diseño inmersivo para forjar el futuro digital.
+                    </motion.p>
 
-                {/* Tech stack indicators */}
-            <motion.div 
-                  className="mt-6 flex flex-wrap gap-3"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.5, duration: 0.8 }}
-                >
-                  {["React", "Node.js", "TypeScript", "Python", "AWS"].map((tech, index) => (
                     <motion.div
-                      key={tech}
-                      className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-white/70 backdrop-blur-md"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 1.5 + (index * 0.1), duration: 0.5 }}
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.8, delay: 0.4 }}
+                      className="mt-8"
                     >
-                      {tech}
+                      <a 
+                        href="/documents/CV David Badell.pdf" 
+                        download
+                        className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white font-medium text-lg hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-xl"
+                        onMouseEnter={() => handleCursorEnter("button")}
+                        onMouseLeave={handleCursorLeave}
+                      >
+                        <svg 
+                          className="w-5 h-5 mr-2" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            strokeWidth={2} 
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                          />
+                        </svg>
+                        Descargar CV
+                      </a>
                     </motion.div>
-                  ))}
+
+                    <div className="mt-12">
+                      {/* Tech stack indicators */}
+                      <motion.div 
+                        className="mt-6 flex flex-wrap gap-3"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.5, duration: 0.8 }}
+                      >
+                        {["React", "Node.js", "TypeScript", "Python", "AWS"].map((tech, index) => (
+                          <motion.div
+                            key={tech}
+                            className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-white/70 backdrop-blur-md"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 1.5 + (index * 0.1), duration: 0.5 }}
+                          >
+                            {tech}
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    </div>
+                  </motion.div>
                 </motion.div>
               </motion.div>
 
@@ -1422,7 +1452,7 @@ export default function Home() {
                     description: "CRM de WhatsApp que optimiza la comunicación empresarial y gestión de clientes en tiempo real.",
                     link: "https://wconecta360.xyz/",
                     image: "/img/wconecta360.png",
-                    tags: ["React", "Node.js", "WebSocket"],
+                    tags: ["Laravel", "Vue.js", "WebSocket"],
                     color: "from-green-400 to-emerald-400",
                     stats: {
                       messages: "1M+",
@@ -1448,7 +1478,7 @@ export default function Home() {
                     description: "Gestión de carreras de taxi y pedidos por WhatsApp, optimizando la logística de transporte.",
                     link: "#",
                     image: "/img/beoppel.png",
-                    tags: ["React Native", "Node.js", "MongoDB"],
+                    tags: ["Laravel", "React.js", "MongoDB"],
                     color: "from-yellow-400 to-orange-400",
                     stats: {
                       rides: "+10K",
@@ -1487,7 +1517,7 @@ export default function Home() {
                     description: "E-commerce con CRM integrado de WhatsApp para una atención al cliente personalizada.",
                     link: "#",
                     image: "/img/yupiii.png",
-                    tags: ["Next.js", "Stripe", "WhatsApp API"],
+                    tags: ["Laravel", "Vue.js", "WhatsApp API"],
                     color: "from-pink-400 to-rose-400",
                     stats: {
                       sales: "+1M",
@@ -1500,7 +1530,7 @@ export default function Home() {
                     description: "Gestión unificada de emails con IA para optimizar respuestas empresariales automáticas.",
                     link: "#",
                     image: "/img/qresponse.png",
-                    tags: ["AI", "Python", "React"],
+                    tags: ["AI", "Node.js", "React"],
                     color: "from-sky-400 to-blue-400",
                     stats: {
                       accuracy: "98%",

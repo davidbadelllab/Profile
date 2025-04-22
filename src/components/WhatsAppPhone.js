@@ -174,7 +174,7 @@ export default function WhatsAppPhone() {
         
         const newMessage = {
           id: 1,
-          text: data.response,
+          text: data.choices?.[0]?.message?.content || data.message || "Hola, soy David Badell",
           time: format(new Date(), 'H:mm'),
           isUser: false,
           status: 'read'
@@ -192,13 +192,10 @@ export default function WhatsAppPhone() {
     }
   }, [messages.length]);
 
-  // Simulación de respuesta automática
+  // Manejar respuesta automática
   useEffect(() => {
-    let isSubscribed = true;
-
     if (messages.length > 0 && messages[messages.length - 1].isUser) {
       const getResponse = async () => {
-        setIsTyping(true);
         try {
           const response = await fetch('/api/chat', {
             method: 'POST',
@@ -217,47 +214,41 @@ export default function WhatsAppPhone() {
 
           const data = await response.json();
           
-          if (isSubscribed) {
-            setIsTyping(false);
-            setTimeout(() => {
-              const assistantMessage = {
-                id: messages.length + 1,
-                text: data.message,
-                time: format(new Date(), 'H:mm'),
-                isUser: false,
-                status: 'read'
-              };
-              
-              setMessages(prev => [...prev, assistantMessage]);
-              setMessageCount(prev => prev + 1);
-            }, 500);
-          }
+          // Mostrar el mensaje inmediatamente
+          const assistantMessage = {
+            id: messages.length + 1,
+            text: data.choices?.[0]?.message?.content || data.message || "No pude procesar tu mensaje",
+            time: format(new Date(), 'H:mm'),
+            isUser: false,
+            status: 'read'
+          };
+          
+          setMessages(prev => [...prev, assistantMessage]);
+          setMessageCount(prev => prev + 1);
+          setIsTyping(false);
+          
         } catch (error) {
           console.error('Error:', error);
-          if (isSubscribed) {
-            setIsTyping(false);
-            const errorMessage = {
-              id: messages.length + 1,
-              text: "Lo siento, ha ocurrido un error. Por favor, intenta de nuevo.",
-              time: format(new Date(), 'H:mm'),
-              isUser: false,
-              status: 'error'
-            };
-            
-            setMessages(prev => [...prev, errorMessage]);
-          }
+          const errorMessage = {
+            id: messages.length + 1,
+            text: "Lo siento, ha ocurrido un error. Por favor, intenta de nuevo.",
+            time: format(new Date(), 'H:mm'),
+            isUser: false,
+            status: 'error'
+          };
+          
+          setMessages(prev => [...prev, errorMessage]);
+          setIsTyping(false);
         }
       };
 
+      setIsTyping(true);
       getResponse();
     }
-    
-    return () => {
-      isSubscribed = false;
-      setIsTyping(false);
-    };
   }, [messages, messageCount]);
 
+  // Resto del código del componente (sin cambios)
+  // ... (mantener el resto del código igual)
   useEffect(() => {
     const checkUnreadMessages = () => {
       const unreadMessages = messages.filter(
@@ -283,35 +274,11 @@ export default function WhatsAppPhone() {
         text: text,
         time: format(new Date(), 'H:mm'),
         isUser: true,
-        status: 'pending'
+        status: 'read' // Cambiado a 'read' directamente
       };
       
       setMessages(prev => [...prev, newMessage]);
-      
-      // Simular estados de mensaje enviado y leído
-      setTimeout(() => {
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === newMessage.id ? { ...msg, status: 'sent' } : msg
-          )
-        );
-      }, 500);
-
-      setTimeout(() => {
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === newMessage.id ? { ...msg, status: 'delivered' } : msg
-          )
-        );
-      }, 1000);
-
-      setTimeout(() => {
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === newMessage.id ? { ...msg, status: 'read' } : msg
-          )
-        );
-      }, 1500);
+      setInputValue('');
     }
   };
 

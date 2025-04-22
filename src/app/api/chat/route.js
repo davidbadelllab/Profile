@@ -1,34 +1,49 @@
 import { NextResponse } from 'next/server';
 
-const CV_INFO = `Mi nombre es David Badell, soy un desarrollador Full Stack con experiencia en React, Next.js, Node.js, y bases de datos SQL y NoSQL. Me especializo en crear aplicaciones web modernas y eficientes. Puedes contactarme en davidbadelljose5@gmail.com o en mi LinkedIn: linkedin.com/in/david-badell`;
+const CV_INFO = `Mi nombre es David Badell, soy un desarrollador Full Stack con experiencia en Laravel, React (Native, JS, "TS"), Next.js, Node.js, Python, y bases de datos SQL y NoSQL. Me especializo en crear aplicaciones web modernas y eficientes. Puedes contactarme en davidbadelljose5@gmail.com o en mi LinkedIn: linkedin.com/in/david-badell`;
 
 const CONTACT_MESSAGE = "Has enviado 3 mensajes. Si quieres seguir la conversación, por favor contáctame directamente a través de davidbadelljose5@gmail.com o LinkedIn: linkedin.com/in/david-badell";
 
+// Cache expandido para respuestas comunes
+const COMMON_RESPONSES = {
+  "hola": "¡Hola! Soy David Badell, ¿en qué puedo ayudarte hoy?",
+  "quien eres": CV_INFO,
+  "contacto": "Puedes contactarme en davidbadelljose5@gmail.com o LinkedIn: linkedin.com/in/david-badell",
+  "experiencia": "Tengo más de 7 años de experiencia en desarrollo web, especializándome en React, Next.js y Node.js.",
+  "tecnologias": "Trabajo principalmente con React, Next.js, Node.js, TypeScript, y bases de datos como MongoDB y PostgreSQL.",
+  "proyectos": "He trabajado en diversos proyectos web, desde aplicaciones empresariales hasta sitios de comercio electrónico.",
+  "habilidades": "Mis principales habilidades incluyen desarrollo frontend con React y Next.js, backend con Node.js, y bases de datos SQL/NoSQL.",
+  "email": "Puedes contactarme en davidbadelljose5@gmail.com",
+  "linkedin": "Mi perfil de LinkedIn es: linkedin.com/in/david-badell",
+  "stack": "Mi stack tecnológico principal incluye React, Next.js, Node.js, TypeScript, y bases de datos SQL/NoSQL."
+};
+
 async function POST(req) {
   try {
-    console.log('Iniciando solicitud...');
     const { message, messageCount } = await req.json();
-    console.log('Mensaje recibido:', message);
-    console.log('Contador de mensajes:', messageCount);
 
-    // Verificar si se han enviado 3 mensajes
+    // Verificar límite de mensajes
     if (messageCount >= 3) {
       return NextResponse.json({ message: CONTACT_MESSAGE });
     }
 
-    console.log('API Key presente:', !!process.env.DEEPSEEK_API_KEY);
-    
+    // Buscar en caché primero
+    const normalizedMessage = message.toLowerCase().trim();
+    for (const [key, response] of Object.entries(COMMON_RESPONSES)) {
+      if (normalizedMessage.includes(key)) {
+        return NextResponse.json({ message: response });
+      }
+    }
+
     const apiUrl = 'https://api.deepseek.com/chat/completions';
     const apiKey = process.env.DEEPSEEK_API_KEY;
-    
-    console.log('Enviando solicitud a:', apiUrl);
     
     const requestBody = {
       model: "deepseek-chat",
       messages: [
         {
           role: "system",
-          content: `${CV_INFO}\nResponde como si fueras David Badell. Sé profesional pero amigable. Mantén las respuestas concisas y relevantes.`
+          content: `${CV_INFO}\nResponde como David Badell. Sé conciso y directo.`
         },
         {
           role: "user",
@@ -36,61 +51,51 @@ async function POST(req) {
         }
       ],
       stream: false,
-      max_tokens: 500,
-      temperature: 0.7
+      max_tokens: 250, // Reducido para respuestas más rápidas
+      temperature: 0.5, // Reducido para respuestas más consistentes
+      presence_penalty: 0.1,
+      frequency_penalty: 0.1
     };
-    
-    console.log('Request body:', JSON.stringify(requestBody, null, 2));
 
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify(requestBody)
-    });
+    // Timeout reducido a 5 segundos
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-    console.log('Status:', response.status);
-    console.log('Headers:', Object.fromEntries(response.headers.entries()));
-
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Error de la API:', {
-        status: response.status,
-        statusText: response.statusText,
-        data: errorData
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(requestBody),
+        signal: controller.signal
       });
-      throw new Error(`HTTP error! status: ${response.status}, data: ${errorData}`);
-    }
 
-    const data = await response.json();
-    console.log('Respuesta exitosa:', JSON.stringify(data, null, 2));
-    
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      throw new Error('Formato de respuesta inválido: ' + JSON.stringify(data));
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return NextResponse.json({ 
+        message: data.choices[0].message.content 
+      });
+
+    } catch (error) {
+      // Si hay error en la API, usar respuesta alternativa
+      return NextResponse.json({
+        message: "Disculpa, estoy procesando muchas consultas. Por favor, escribe tu pregunta de forma más específica o contáctame directamente en davidbadelljose5@gmail.com"
+      });
     }
-    
-    return NextResponse.json({ 
-      message: data.choices[0].message.content 
-    });
 
   } catch (error) {
-    console.error('Error detallado:', {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
-    });
     return NextResponse.json(
-      { 
-        error: 'Lo siento, ha ocurrido un error al procesar tu mensaje.',
-        details: {
-          message: error.message
-        }
-      },
+      { message: "Lo siento, ha ocurrido un error. Por favor, intenta de nuevo." },
       { status: 500 }
     );
   }
 }
 
-export { POST }; 
+export { POST };

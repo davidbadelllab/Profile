@@ -275,6 +275,19 @@ export default function Phone() {
           </svg>
           <span className="text-xs mt-1">Inicio</span>
         </button>
+
+        <a 
+          href="/documents/CV David Badell.pdf"
+          download
+          className="flex flex-col items-center text-gray-400 hover:text-blue-400 transition-colors"
+        >
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 14L12 5M12 14L9 11M12 14L15 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M7 14.5V16C7 16.9319 7 17.3978 7.15224 17.7654C7.35523 18.2554 7.74458 18.6448 8.23463 18.8478C8.60218 19 9.06812 19 10 19H14C14.9319 19 15.3978 19 15.7654 18.8478C16.2554 18.6448 16.6448 18.2554 16.8478 17.7654C17 17.3978 17 16.9319 17 16V14.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <span className="text-xs mt-1">CV</span>
+        </a>
+
         <button 
           onClick={() => setActiveTab('contact')}
           className={`flex flex-col items-center ${activeTab === 'contact' ? 'text-blue-400' : 'text-gray-400'}`}
