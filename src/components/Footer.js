@@ -77,16 +77,16 @@ export default function Footer() {
               <li className="flex items-center space-x-2">
                 <span className="text-gray-600 dark:text-gray-400">Email:</span>
                 <a 
-                  href="mailto:tu@email.com"
+                  href="mailto:davidbadelljose5@gmail.com"
                   className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  tu@email.com
+                  davidbadelljose5@gmail.com
                 </a>
               </li>
               <li className="flex items-center space-x-2">
                 <span className="text-gray-600 dark:text-gray-400">LinkedIn:</span>
                 <a 
-                  href="https://linkedin.com/in/tu-perfil"
+                  href="https://www.linkedin.com/feed/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-600 dark:text-blue-400 hover:underline"
@@ -94,17 +94,7 @@ export default function Footer() {
                   Mi Perfil
                 </a>
               </li>
-              <li className="flex items-center space-x-2">
-                <span className="text-gray-600 dark:text-gray-400">GitHub:</span>
-                <a 
-                  href="https://github.com/tu-usuario"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 dark:text-blue-400 hover:underline"
-                >
-                  Mi GitHub
-                </a>
-              </li>
+              
             </ul>
           </motion.div>
         </div>
