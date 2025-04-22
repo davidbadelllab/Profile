@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format } from 'date-fns'
+import Image from 'next/image'
 
 // Datos de ejemplo para el chat
 const initialMessages = []
@@ -141,7 +142,7 @@ export default function WhatsAppPhone() {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
     }
-  }, [messages])
+  }, [messages.length])
 
   // Enviar mensaje inicial al cargar el componente
   useEffect(() => {
@@ -189,7 +190,7 @@ export default function WhatsAppPhone() {
     if (messages.length === 0) {
       sendInitialMessage();
     }
-  }, []);
+  }, [messages.length]);
 
   // Simulación de respuesta automática
   useEffect(() => {
@@ -218,7 +219,6 @@ export default function WhatsAppPhone() {
           
           if (isSubscribed) {
             setIsTyping(false);
-            // Simular un pequeño retraso para que parezca más natural
             setTimeout(() => {
               const assistantMessage = {
                 id: messages.length + 1,
@@ -256,7 +256,25 @@ export default function WhatsAppPhone() {
       isSubscribed = false;
       setIsTyping(false);
     };
-  }, [messages.length, messageCount]);
+  }, [messages, messageCount]);
+
+  useEffect(() => {
+    const checkUnreadMessages = () => {
+      const unreadMessages = messages.filter(
+        msg => !msg.isUser && msg.status !== 'read'
+      );
+      
+      if (unreadMessages.length > 0) {
+        setMessages(prev => 
+          prev.map(msg => 
+            !msg.isUser ? { ...msg, status: 'read' } : msg
+          )
+        );
+      }
+    };
+
+    checkUnreadMessages();
+  }, [messages]);
 
   const handleSendMessage = (text) => {
     if (text.trim()) {
@@ -356,10 +374,11 @@ export default function WhatsAppPhone() {
             whileTap={{ scale: 0.95 }}
           >
             <div className="w-10 h-10 rounded-full bg-[#D1D7DB] overflow-hidden">
-              <img 
+              <Image 
                 src="/img/a-modern-and-professional-logo-for-a-sof_qrwWFp2eQwmfdwP_K-uGcw_OwHOFCoMTYqa5HeYJBIRxA.jpeg" 
                 alt="Mi Numero Entel" 
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
             {isOnline && (
@@ -419,10 +438,8 @@ export default function WhatsAppPhone() {
         ref={chatContainerRef}
         className="flex-1 overflow-y-auto px-3 py-2"
         style={{ 
-          backgroundImage: `url('/img/bgwspjpg.jpg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+        position: 'relative',
+        overflow: 'hidden'
         }}
       >
         {/* Today Separator */}

@@ -291,7 +291,7 @@ export default function Home() {
 
   // Si es móvil, renderizar SOLO el componente Phone sin ningún otro contenido
   if (isMobile) {
-  return (
+    return (
       <div className="fixed inset-0">
         <Phone />
       </div>
@@ -748,9 +748,9 @@ export default function Home() {
                       <span className="text-blue-300">developer</span>{" "}
                       <span className="text-pink-400">=</span>{" "}
                       <span className="text-yellow-300">{"{"}</span><br/>
-                      {"  "}<span className="text-green-300">name</span>: <span className="text-orange-300">'David Dev'</span>,<br/>
-                      {"  "}<span className="text-green-300">skills</span>: [<span className="text-orange-300">'React'</span>, <span className="text-orange-300">'Node'</span>],<br/>
-                      {"  "}<span className="text-green-300">passion</span>: <span className="text-orange-300">'Coding'</span><br/>
+                      {"  "}<span className="text-green-300">name</span>: <span className="text-orange-300">&apos;David Dev&apos;</span>,<br/>
+                      {"  "}<span className="text-green-300">skills</span>: [<span className="text-orange-300">&apos;React&apos;</span>, <span className="text-orange-300">&apos;Node&apos;</span>],<br/>
+                      {"  "}<span className="text-green-300">passion</span>: <span className="text-orange-300">&apos;Coding&apos;</span><br/>
                       <span className="text-yellow-300">{"}"}</span>;
                     </div>
                   </motion.div>

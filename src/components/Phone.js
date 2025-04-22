@@ -151,10 +151,8 @@ export default function Phone() {
                           {tech}
                         </motion.span>
                       ))}
-              </div>
-
-              
-            </motion.div>
+                    </div>
+                  </motion.div>
                 </GlassmorphicCard>
               </motion.div>
 
@@ -220,95 +218,6 @@ export default function Phone() {
                     </div>
                   </div>
                 </GlassmorphicCard>
-              </div>
-
-              {/* Projects Section */}
-              <div className="mb-8">
-                <h2 className="text-xl font-bold mb-4 text-white flex items-center">
-                  <svg className="w-5 h-5 mr-2 text-blue-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  Proyectos Destacados
-                </h2>
-                
-                <div className="grid grid-cols-1 gap-4">
-                  {[
-                    {
-                      title: "Impulsa360",
-                      description: "Plataforma de marketing digital con análisis en tiempo real y automatización de campañas",
-                      gradient: "from-blue-500 to-cyan-500",
-                      tags: ["React", "Node.js", "MongoDB"]
-                    },
-                    {
-                      title: "WConecta360",  
-                      description: "Solución de comunicación unificada para empresas con chat, video y gestión de contactos",
-                      gradient: "from-purple-500 to-pink-500",
-                      tags: ["Next.js", "WebRTC", "Firebase"]
-                    },
-                    {
-                      title: "QuoteMasterAI",
-                      description: "Generador inteligente de cotizaciones con integración de IA para recomendaciones",
-                      gradient: "from-amber-500 to-orange-500",
-                      tags: ["TypeScript", "OpenAI", "Stripe"]
-                    },
-                    {
-                      title: "Beoppel",
-                      description: "Sistema de gestión de flotas de taxis con geolocalización y pagos integrados",
-                      gradient: "from-emerald-500 to-teal-500",
-                      tags: ["React Native", "Node.js", "PostgreSQL"]  
-                    },
-                    {
-                      title: "Spotly",
-                      description: "Gestor de citas médicas con recordatorios automáticos y teleconsulta",
-                      gradient: "from-violet-500 to-fuchsia-500",
-                      tags: ["Vue.js", "Laravel", "MySQL"]
-                    },
-                    {
-                      title: "BookNew",  
-                      description: "Red social para lectores con recomendaciones personalizadas y clubes de lectura",
-                      gradient: "from-rose-500 to-red-500",
-                      tags: ["Svelte", "NestJS", "MongoDB"]
-                    },
-                    {
-                      title: "Yupiii",
-                      description: "Plataforma e-commerce con CRM integrado y análisis de comportamiento",
-                      gradient: "from-indigo-500 to-blue-500", 
-                      tags: ["Next.js", "Strapi", "PostgreSQL"]
-                    },
-                    {
-                      title: "QResponse",
-                      description: "Sistema de gestión de respuestas de email asistido por IA",
-                      gradient: "from-green-500 to-lime-500",
-                      tags: ["React", "Python", "FastAPI"]
-                    }
-                  ].map((project, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 * index }}
-                    >
-                      <GlassmorphicCard className="p-4">
-                        <div className="flex items-start space-x-3">
-                          <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${project.gradient} flex items-center justify-center text-white text-xl font-bold`}>
-                            {project.title.charAt(0)}
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-bold text-white">{project.title}</h3>
-                            <p className="text-sm text-gray-300 mt-1">{project.description}</p>
-                            <div className="flex flex-wrap gap-1 mt-2">
-                              {project.tags.map((tag, i) => (
-                                <span key={i} className="px-2 py-0.5 text-xs bg-white/5 rounded-full border border-white/10">
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </GlassmorphicCard>
-                    </motion.div>
-                  ))}
-                </div>
               </div>
 
               {/* Skills Section */}
