@@ -204,7 +204,7 @@ export default function Phone() {
                       Con más de <span className="text-blue-400 font-semibold">7 años de experiencia</span> en desarrollo web, he trabajado en sectores como fintech, e-commerce y educación, creando soluciones innovadoras que combinan estética y funcionalidad.
                     </p>
                     <div className="mt-4 flex space-x-3">
-                      {["📍 Madrid", "🔗 Github", "💼 Disponible"].map((item, index) => (
+                      {["📍 Santiago de chile", "🔗 Github", "💼 Disponible"].map((item, index) => (
                         <motion.span 
                           key={index}
                           className="text-xs text-gray-400"
