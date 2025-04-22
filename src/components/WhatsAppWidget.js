@@ -13,13 +13,14 @@ export default function WhatsAppWidget() {
 
   return (
     <motion.div
+      suppressHydrationWarning
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{
         type: "spring",
         stiffness: 260,
         damping: 20,
-        delay: 1.
+        delay: 1
       }}
       className="fixed bottom-8 right-8 z-50"
     >

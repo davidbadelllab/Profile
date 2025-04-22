@@ -1,6 +1,11 @@
-import { motion } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+'use client'
+
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { FaGithub, FaExternalLinkAlt, FaCode, FaServer, FaMobile, FaDatabase, FaArrowRight } from 'react-icons/fa';
 import Image from 'next/image';
+import { useRef, useState, useEffect } from 'react';
+import Lenis from 'lenis';
+import { useInView } from 'react-intersection-observer';
 
 // Datos de testimonios
 const testimonials = [
@@ -58,99 +63,183 @@ const projects = [
 ];
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
+  hidden: { opacity: 0, y: 50, scale: 0.95 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
+
+const iconMap = {
+  'Laravel': <FaServer className="h-5 w-5" />,
+  'React': <FaCode className="h-5 w-5" />,
+  'Node.js': <FaServer className="h-5 w-5" />,
+  'MongoDB': <FaDatabase className="h-5 w-5" />,
+  'Mobile': <FaMobile className="h-5 w-5" />,
+  'TypeScript': <FaCode className="h-5 w-5" />,
+  'MySQL': <FaDatabase className="h-5 w-5" />,
+  'AWS': <FaServer className="h-5 w-5" />
 };
 
 export default function Projects() {
+  const { scrollYProgress } = useScroll();
+  const sectionRef = useRef(null);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  });
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: 'vertical',
+      gestureDirection: 'vertical',
+      smooth: true,
+      smoothTouch: false,
+      touchMultiplier: 2,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
+
   return (
-    <section className="py-16">
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        transition={{ duration: 0.5 }}
-        className="text-center mb-12"
-      >
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-500">
-          Proyectos Destacados
-        </h2>
-        <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          Una selección de mis trabajos más recientes y significativos, demostrando mi experiencia en desarrollo full-stack y soluciones innovadoras.
-        </p>
-      </motion.div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {projects.map((project, index) => (
-          <motion.div
-            key={index}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
-          >
-            <div className="relative h-64 w-full overflow-hidden">
-              <Image
-                src={project.image}
-                alt={project.title}
-                layout="fill"
-                className="object-cover group-hover:scale-110 transition-transform duration-300"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-            </div>
-
-            <div className="absolute top-4 left-4 flex gap-2">
-              {project.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 text-xs font-semibold bg-blue-500/80 text-white rounded-full"
+    <div className="bg-white dark:bg-gray-900">
+      <div className="container mx-auto px-4 py-12">
+        <motion.h1 
+          className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Mis Proyectos
+        </motion.h1>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" ref={ref}>
+          {projects.map((project, index) => (
+            <motion.div
+              key={index}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <div className="p-6">
+                <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+                  {project.title}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  {project.description}
+                </p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {project.technologies.map((tech, techIndex) => (
+                    <span
+                      key={techIndex}
+                      className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded-full text-sm text-gray-800 dark:text-gray-200"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+                <a
+                  href={project.githubUrl}
+                  className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                 >
-                  {tag}
-                </span>
-              ))}
-            </div>
+                  Ver Proyecto
+                </a>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
 
-            <div className="p-6">
-              <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
-
-              <div className="flex flex-wrap gap-2 mb-4">
-                {project.technologies.map((tech) => (
+      {/* Modal de Detalles del Proyecto */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-lg z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedProject(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="bg-white/10 dark:bg-gray-800/10 backdrop-blur-lg rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="relative h-[400px] w-full mb-8 rounded-2xl overflow-hidden">
+                <Image
+                  src={selectedProject.image}
+                  alt={selectedProject.title}
+                  layout="fill"
+                  className="object-cover"
+                />
+              </div>
+              <h3 className="text-4xl font-bold text-white mb-4">{selectedProject.title}</h3>
+              <p className="text-gray-200 text-lg mb-6">{selectedProject.description}</p>
+              <div className="flex flex-wrap gap-3 mb-8">
+                {selectedProject.technologies.map((tech) => (
                   <span
                     key={tech}
-                    className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 rounded-full"
+                    className="px-4 py-2 text-sm bg-white/10 backdrop-blur-sm text-white rounded-full flex items-center gap-2 border border-white/20"
                   >
+                    {iconMap[tech] || <FaCode className="h-4 w-4" />}
                     {tech}
                   </span>
                 ))}
               </div>
-
-              <div className="flex items-center space-x-4">
-                <a
-                  href={project.githubUrl}
+              <div className="flex items-center space-x-6">
+                <motion.a
+                  href={selectedProject.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors"
+                  className="flex items-center space-x-2 text-white hover:text-blue-400 transition-colors text-lg"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <FaGithub className="h-5 w-5" />
+                  <FaGithub className="h-6 w-6" />
                   <span>Código</span>
-                </a>
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors"
-                >
-                  <FaExternalLinkAlt className="h-4 w-4" />
-                  <span>Demo en vivo</span>
-                </a>
+                </motion.a>
+                {selectedProject.liveUrl && (
+                  <motion.a
+                    href={selectedProject.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-2 text-white hover:text-blue-400 transition-colors text-lg"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <FaExternalLinkAlt className="h-5 w-5" />
+                    <span>Demo en vivo</span>
+                  </motion.a>
+                )}
               </div>
-            </div>
-
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-teal-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </motion.div>
           </motion.div>
-        ))}
-      </div>
-    </section>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
